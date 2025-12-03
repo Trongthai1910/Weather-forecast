@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: rgb(22, 39, 53);
+    }
+
+    body {
+      background-image: url("https://images.pexels.com/photos/258149/pexels-photo-258149.jpeg");
+      background-position: center;
+      background-size: cover;
+    }
+
+    #search_container {
+      text-align: center;
+    }
+
+    #city {
+      color: rgb(202, 213, 237);
+      font-size: 30px;
+      font-weight: bold;
+      margin: 10px;
+    }
+
+    .container {
+      padding: 20px;
+      display: flex;
+    }
+
+    .card {
+      height: 650px;
+      width: 400px;
+      max-width: 400px;
+      background-color: rgba(203, 241, 244, 0.5);
+      margin-inline: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(243, 217, 140, 0.2);
+      padding: 30px;
+      box-sizing: border-box;
+    }
+
+    .card:hover {
+      cursor: pointer;
+      filter: brightness(110%);
+    }
+
+    .weather {
+      font-size: 30px;
+      color: rgb(3, 135, 25);
+      font-weight: bold;
+      text-align: center;
+      margin-top: 0px;
+    }
+
+
+    .temp_container,
+    .feels_like_container,
+    .pop_container,
+    .humidity_container,
+    .icon {
+      text-align: center;
+    }
+
+    .temp {
+      font-size: 45px;
+      color: rgb(129, 73, 0);
+      margin: 5px 0px 15px 0px;
+      font-weight: bold;
+    }
+
+    .feels_like,
+    .min,
+    .max,
+    .humidity,
+    .pop {
+      font-size: 30px;
+      font-weight: bold;
+      color: rgb(44, 77, 112);
+      margin-top: 0px;
+    }
+
+    .min_max {
+      display: flex;
+      justify-content: space-around;
+    }
+  </style>
+  <script>
+    function WeatherForecast(data, index) {
+      let point = data["list"][index + 1]
+
+      let time = document.querySelectorAll("div.time")
+      time[index].innerHTML = point["dt_txt"]
+
+      let temp = document.querySelectorAll("p.temp")
+      temp[index].innerHTML = `${(point["main"]["temp"] - 273.15).toFixed(1)}°C`
+
+      let weather = document.querySelectorAll("p.weather")
+      weather[index].innerHTML = point["weather"][0]["main"]
+
+      let feels_like = document.querySelectorAll("span.feels_like")
+      feels_like[index].innerHTML = `${(point["main"]["feels_like"] - 273.15).toFixed(1)}°C`
+
+      let min = document.querySelectorAll("span.min")
+      min[index].innerHTML = `${(point["main"]["temp_min"] - 273.15).toFixed(1)}°C`
+
+      let max = document.querySelectorAll("span.max")
+      max[index].innerHTML = `${(point["main"]["temp_max"] - 273.15).toFixed(1)}°C`
+
+      let humidity = document.querySelectorAll("span.humidity")
+      humidity[index].innerHTML = `${(point["main"]["humidity"])}%`
+
+      let pop = document.querySelectorAll("span.pop")
+      pop[index].innerHTML = `${(point["pop"] * 100)}%`
+
+      let img = document.getElementsByTagName("img");
+      img[index].src = `https://openweathermap.org/img/wn/${point['weather'][0]['icon']}@2x.png`
+
+    }
+    function Hanoi() {
+      fetch("https://api.openweathermap.org/data/2.5/forecast?q=Hanoi&appid=d159ef1f3e7233d0fb81cc97ba8dd7fc")
+        .then(response => response.json())
+        .then(data => {
+          for (let i = 0; i < 4; i++) {
+            WeatherForecast(data, i)
+          }
+        })
+        .catch(error => console.log("Error: " + error))
+    }
+    function seacrh_city() {
+      let name = document.getElementById("city_name").value;
+      fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${name}&appid=d159ef1f3e7233d0fb81cc97ba8dd7fc`)
+        .then(response => response.json())
+        .then(data => {
+          for (let i = 0; i < 4; i++) {
+            WeatherForecast(data, i)
+          }
+        })
+        .catch(error => console.log("Error: " + error))
+      document.getElementById("city").innerHTML = name
+    }
+  </script>
+</head>
+
+<body onload="Hanoi()">
+  <div id="search_container">
+    <input type="text" name="" id="city_name" placeholder="City name">
+    <button id="search_button" onclick="seacrh_city()">search</button>
+    <p id="city">Hanoi</p>
+  </div>
+  <div class="container">
+    <!-- card 1 -->
+    <div class="card">
+      <div class="time">15:00</div>
+      <div class="icon">
+        <img src="" alt="">
+      </div>
+      <div>
+        <p class="weather">Rain</p>
+      </div>
+      <div class="temp_container">
+        <div>Temprature: </div>
+        <p class="temp">32C</p>
+      </div>
+      <div class="feels_like_container">
+        <p>Feels like: <span class="feels_like">29C</span></p>
+      </div>
+      <div class="min_max">
+        <p>Min: <span class="min">28</span></p>
+        <p>Max: <span class="max">40</span></p>
+      </div>
+      <div class="humidity_container">
+        <p>Humidity: <span class="humidity">80%</span></p>
+      </div>
+      <div class="pop_container">
+        <p>Probability of Precipitation: <br><span class="pop">2%</span></p>
+      </div>
+    </div>
+    <!-- card 2 -->
+    <div class="card">
+      <div class="time">15:00</div>
+      <div class="icon">
+        <img src="" alt="">
+      </div>
+      <div>
+        <p class="weather">Rain</p>
+      </div>
+      <div class="temp_container">
+        <div>Temprature: </div>
+        <p class="temp">32C</p>
+      </div>
+      <div class="feels_like_container">
+        <p>Feels like: <span class="feels_like">29C</span></p>
+      </div>
+      <div class="min_max">
+        <p>Min: <span class="min">28</span></p>
+        <p>Max: <span class="max">40</span></p>
+      </div>
+      <div class="humidity_container">
+        <p>Humidity: <span class="humidity">80%</span></p>
+      </div>
+      <div class="pop_container">
+        <p>Probability of Precipitation: <br><span class="pop">2%</span></p>
+      </div>
+    </div>
+    <!-- card 3 -->
+    <div class="card">
+      <div class="time">15:00</div>
+      <div class="icon">
+        <img src="" alt="">
+      </div>
+      <div>
+        <p class="weather">Rain</p>
+      </div>
+      <div class="temp_container">
+        <div>Temprature: </div>
+        <p class="temp">32C</p>
+      </div>
+      <div class="feels_like_container">
+        <p>Feels like: <span class="feels_like">29C</span></p>
+      </div>
+      <div class="min_max">
+        <p>Min: <span class="min">28</span></p>
+        <p>Max: <span class="max">40</span></p>
+      </div>
+      <div class="humidity_container">
+        <p>Humidity: <span class="humidity">80%</span></p>
+      </div>
+      <div class="pop_container">
+        <p>Probability of Precipitation: <br><span class="pop">2%</span></p>
+      </div>
+    </div>
+    <!-- card 4 -->
+    <div class="card">
+      <div class="time">15:00</div>
+      <div class="icon">
+        <img src="" alt="">
+      </div>
+      <div>
+        <p class="weather">Rain</p>
+      </div>
+      <div class="temp_container">
+        <div>Temprature: </div>
+        <p class="temp">32C</p>
+      </div>
+      <div class="feels_like_container">
+        <p>Feels like: <span class="feels_like">29C</span></p>
+      </div>
+      <div class="min_max">
+        <p>Min: <span class="min">28</span></p>
+        <p>Max: <span class="max">40</span></p>
+      </div>
+      <div class="humidity_container">
+        <p>Humidity: <span class="humidity">80%</span></p>
+      </div>
+      <div class="pop_container">
+        <p>Probability of Precipitation: <br><span class="pop">2%</span></p>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
